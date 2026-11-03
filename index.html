@@ -5,71 +5,162 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sure AI</title>
 <style>
-body{margin:0;background:#070b22;color:white;font-family:Arial,sans-serif}
-main{max-width:750px;margin:50px auto;padding:20px}
-h1{text-align:center;color:#19dcff}
-#messages{background:#101a3b;padding:20px;border-radius:15px;min-height:250px}
-.msg{padding:12px;margin:10px 0;background:#26345c;border-radius:12px;white-space:pre-wrap}
-.user{text-align:right;background:#284b82}
-form{display:flex;gap:8px;margin-top:15px}
-input{flex:1;min-width:0;padding:14px;border-radius:10px;border:0}
-button{padding:12px 18px;background:#08bfe9;color:#071027;border:0;border-radius:10px;font-weight:bold}
-#status{text-align:center;color:#19dcff}
+*{box-sizing:border-box}
+body{margin:0;background:#080d25;color:white;font-family:Arial,sans-serif}
+header{padding:16px 20px;background:#111a38;display:flex;justify-content:space-between;align-items:center}
+h2{margin:0;color:#19dcff}
+button{padding:10px 14px;border:0;border-radius:9px;background:#147bd1;color:white;cursor:pointer}
+.layout{display:flex;max-width:1100px;margin:25px auto;gap:18px;padding:10px}
+aside{width:230px;background:#111a38;padding:14px;border-radius:12px}
+aside button{width:100%;margin-bottom:10px}
+#history button{background:#202c50;text-align:left;overflow:hidden;text-overflow:ellipsis}
+main{flex:1;min-width:0}
+#messages{background:#111a38;border-radius:12px;padding:18px;min-height:400px}
+.msg{padding:12px;margin:10px 0;background:#25345d;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{background:#17528a;text-align:right}
+form{display:flex;gap:8px;margin-top:12px}
+input{flex:1;min-width:0;padding:14px;border-radius:9px;border:0}
+#status{color:#19dcff}
+@media(max-width:600px){.layout{flex-direction:column}aside{width:100%}#messages{min-height:300px}}
 </style>
 </head>
 <body>
+<header>
+<h2>Sure AI</h2>
+<button onclick="newChat()">+ New Chat</button>
+</header>
+<div class="layout">
+<aside>
+<h3>Chat History</h3>
+<div id="history"></div>
+</aside>
 <main>
-<h1>Sure AI</h1>
-<p style="text-align:center">Your Personal AI Assistant</p>
-<p id="status">AI Assistant Ready</p>
-<div id="messages">
-<div class="msg">নমস্কার! আমি Sure AI। কী জানতে চাও?</div>
-</div>
+<p id="status">Sure AI Ready</p>
+<div id="messages"></div>
 <form id="chatForm">
-<input id="prompt" placeholder="এখানে প্রশ্ন লেখো..." required>
+<input id="prompt" placeholder="এখানে প্রশ্ন লেখো..." required maxlength="4000">
 <button id="send">পাঠান</button>
 </form>
 </main>
+</div>
 <script>
-const form=document.getElementById("chatForm");
-const input=document.getElementById("prompt");
-const messages=document.getElementById("messages");
-const button=document.getElementById("send");
-const statusText=document.getElementById("status");
+let chats=[];
+try{
+ chats=JSON.parse(localStorage.getItem("sureAIChats")||"[]");
+ if(!Array.isArray(chats))chats=[];
+}catch(e){chats=[]}
+
+let currentId=null;
+
+function save(){
+ localStorage.setItem("sureAIChats",JSON.stringify(chats));
+ renderHistory();
+}
+
+function newChat(){
+ const chat={
+  id:Date.now().toString(),
+  title:"নতুন চ্যাট",
+  messages:[]
+ };
+ chats.unshift(chat);
+ currentId=chat.id;
+ save();
+ renderMessages();
+}
+
+function currentChat(){
+ return chats.find(c=>c.id===currentId);
+}
+
+function renderHistory(){
+ const box=document.getElementById("history");
+ box.innerHTML="";
+ chats.forEach(chat=>{
+  const b=document.createElement("button");
+  b.textContent=chat.title;
+  b.onclick=()=>{
+   currentId=chat.id;
+   renderMessages();
+   renderHistory();
+  };
+  if(chat.id===currentId)b.style.background="#1766a5";
+  box.appendChild(b);
+ });
+}
+
+function renderMessages(){
+ const box=document.getElementById("messages");
+ box.innerHTML="";
+ const chat=currentChat();
+ if(!chat)return;
+ if(!chat.messages.length){
+  addMessage("নমস্কার! আমি Sure AI। কী জানতে চাও?","ai");
+  return;
+ }
+ chat.messages.forEach(m=>{
+  addMessage(m.text,m.role==="user"?"user":"ai");
+ });
+}
 
 function addMessage(text,type){
  const div=document.createElement("div");
  div.className="msg "+type;
  div.textContent=text;
- messages.appendChild(div);
+ document.getElementById("messages").appendChild(div);
 }
 
-form.addEventListener("submit",async function(e){
+document.getElementById("chatForm").addEventListener("submit",async e=>{
  e.preventDefault();
+ const input=document.getElementById("prompt");
+ const button=document.getElementById("send");
+ const status=document.getElementById("status");
  const message=input.value.trim();
  if(!message)return;
 
- addMessage(message,"user");
+ if(!currentChat())newChat();
+ const chat=currentChat();
+ const previous=[...chat.messages];
+
+ chat.messages.push({role:"user",text:message});
+ if(chat.title==="নতুন চ্যাট")chat.title=message.slice(0,30);
  input.value="";
+ save();
+ renderMessages();
+
  button.disabled=true;
- statusText.textContent="Sure AI ভাবছে...";
+ status.textContent="Sure AI ভাবছে...";
 
  try{
   const response=await fetch("/api/chat",{
    method:"POST",
    headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({message})
+   body:JSON.stringify({message,history:previous})
   });
   const data=await response.json();
-  if(!response.ok)throw new Error(data.error||"API Error");
-  addMessage(data.reply||"উত্তর পাওয়া যায়নি","ai");
-  statusText.textContent="AI Assistant Ready";
+  if(!response.ok)throw new Error(data.error||"AI Error");
+
+  chat.messages.push({role:"assistant",text:data.reply||"উত্তর পাওয়া যায়নি"});
+  save();
+  renderMessages();
+  status.textContent="Sure AI Ready";
  }catch(error){
+  chat.messages.pop();
+  save();
+  renderMessages();
   addMessage("সমস্যা হয়েছে: "+error.message,"ai");
-  statusText.textContent="Connection Error";
+  status.textContent="Connection Error";
  }
  button.disabled=false;
 });
+
+if(chats.length){
+ currentId=chats[0].id;
+}else{
+ newChat();
+}
+renderHistory();
+renderMessages();
 </script>
 </body>
 </html>
