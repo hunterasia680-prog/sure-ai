@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070b22">
+<title>Sure AI — Your Personal AI Companion</title>
+<style>
+:root{--bg:#070b22;--panel:#101735;--panel2:#151f45;--cyan:#19dcff;--violet:#9c5cff;--text:#f5f7ff;--muted:#aab4d5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0%,#18275c 0,transparent 42%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px clamp(18px,5vw,64px);border-bottom:1px solid #26315b;position:sticky;top:0;background:#070b22eF;backdrop-filter:blur(12px);z-index:2}
+.brand{font-size:1.45rem;font-weight:800;letter-spacing:-.04em}.brand span{color:var(--cyan)}.pill{border:1px solid #285b8a;color:#9eeeff;padding:7px 12px;border-radius:99px;font-size:.8rem}
+main{max-width:1100px;margin:auto;padding:52px 20px 80px}.hero{text-align:center;margin:0 auto 38px;max-width:760px}.eyebrow{color:var(--cyan);font-weight:700;letter-spacing:.13em;text-transform:uppercase;font-size:.75rem}.hero h1{font-size:clamp(2.3rem,7vw,4.5rem);line-height:1.04;letter-spacing:-.055em;margin:12px 0}.gradient{background:linear-gradient(90deg,var(--cyan),#b18aff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);font-size:1.08rem}
+.layout{display:grid;grid-template-columns:260px 1fr;gap:18px}.side,.chat{background:#0d1430;border:1px solid #27345f;border-radius:22px;box-shadow:0 20px 70px #0005}.side{padding:20px;height:max-content}.side h3{margin:0 0 12px;font-size:.95rem}.feature{padding:11px 12px;border-radius:12px;color:#dce5ff;margin:5px 0;background:#121d40}.feature b{color:var(--cyan);margin-right:8px}.side small{display:block;color:var(--muted);margin-top:18px}
+.chat{min-height:520px;display:flex;flex-direction:column;overflow:hidden}.chathead{padding:17px 20px;border-bottom:1px solid #27345f;display:flex;justify-content:space-between;align-items:center}.chathead strong{font-size:1rem}.status{color:#8ee8b4;font-size:.8rem}.messages{padding:22px;display:flex;flex-direction:column;gap:14px;flex:1;min-height:330px}.msg{max-width:85%;padding:13px 16px;border-radius:16px;background:#172247;color:#eaf0ff;white-space:pre-wrap}.msg.user{align-self:flex-end;background:linear-gradient(120deg,#175b88,#493a87)}.msg.bot{align-self:flex-start}.composer{padding:16px;border-top:1px solid #27345f;display:flex;gap:10px}.composer input{min-width:0;flex:1;background:#080f28;border:1px solid #344372;border-radius:14px;padding:14px;color:white;font:inherit;outline:none}.composer input:focus{border-color:var(--cyan)}button{border:0;border-radius:14px;padding:0 20px;background:linear-gradient(110deg,#08bfe9,#8156e8);color:white;font-weight:750;font:inherit;cursor:pointer}button:hover{filter:brightness(1.12)}.note{padding:0 18px 15px;color:#8995bc;font-size:.75rem;text-align:center}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}.card{border:1px solid #26345e;background:#0e1633;border-radius:17px;padding:18px}.card .ico{font-size:1.5rem}.card h3{margin:8px 0 4px}.card p{color:var(--muted);margin:0;font-size:.9rem}footer{text-align:center;color:#8490b7;padding:24px;border-top:1px solid #202c52;font-size:.85rem}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.side{display:none}.cards{grid-template-columns:1fr}.chat{min-height:500px}main{padding-top:35px}}
+</style>
+</head>
+<body>
+<header><div class="brand">Sure <span>AI</span></div><div class="pill">Your Personal AI Companion</div></header>
+<main>
+<section class="hero"><div class="eyebrow">Think Smart · Work Smart · Live Better</div><h1>Meet your <span class="gradient">Sure AI</span></h1><p>Ask questions, explore ideas, learn new things and get help with everyday tasks — all in one place.</p></section>
+<section class="layout">
+<aside class="side"><h3>Explore Sure AI</h3><div class="feature"><b>✦</b> AI Chat</div><div class="feature"><b>▧</b> Image tools</div><div class="feature"><b>◉</b> Voice assistant</div><div class="feature"><b>⌘</b> Coding help</div><div class="feature"><b>◎</b> Knowledge hub</div><small>This is your starter website. AI services can be connected securely in the next setup step.</small></aside>
+<section class="chat">
+<div class="chathead"><strong>💬 Sure AI Assistant</strong><span class="status">● Demo mode</span></div>
+<div class="messages" id="messages"><div class="msg bot">Hello! I’m Sure AI. 👋<br>Welcome! Ask me something to try the website demo.</div></div>
+<form class="composer" id="form"><input id="prompt" autocomplete="off" placeholder="Message Sure AI…" aria-label="Message Sure AI"><button type="submit">Send ➤</button></form>
+<div class="note">Demo replies only — connect an AI provider to enable real AI answers. Do not enter passwords or sensitive information.</div>
+</section>
+</section>
+<section class="cards">
+<div class="card"><div class="ico">🤖</div><h3>Smart Chat</h3><p>A clean place to ask questions and brainstorm.</p></div>
+<div class="card"><div class="ico">🎨</div><h3>Creative Tools</h3><p>Plan image generation and creative features.</p></div>
+<div class="card"><div class="ico">🎙️</div><h3>Voice & Learning</h3><p>Room to add voice and learning tools later.</p></div>
+</section>
+</main>
+<footer>© <span id="year"></span> Sure AI · Powered by innovation</footer>
+<script>
+const form=document.getElementById('form'),input=document.getElementById('prompt'),messages=document.getElementById('messages');
+document.getElementById('year').textContent=new Date().getFullYear();
+function add(text,who){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight}
+form.addEventListener('submit',e=>{e.preventDefault();const q=input.value.trim();if(!q)return;add(q,'user');input.value='';setTimeout(()=>add('Thanks for trying Sure AI! This website is currently in demo mode. To get real AI answers, the next step is to connect a secure AI API through a backend server.','bot'),350)});
+</script>
+</body></html>
