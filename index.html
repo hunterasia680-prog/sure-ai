@@ -6,4 +6,10 @@ let lang='bn';const bn={tag:'ভাবুন স্মার্ট · কাজ 
 const en={tag:'THINK SMART · WORK SMART · LIVE BETTER',heading:'Meet your Sure AI',sub:'Ask questions, learn something new and explore ideas — all in one place.',assistant:'💬 Sure AI Assistant',mode:'Demo mode',welcome:'Hello! I’m Sure AI. Ask me in Bengali or English.',placeholder:'Message Sure AI…',send:'Send ➤',note:'This is a demo. Connect a secure backend/API to enable real AI answers.',reply:'Thanks! This is demo mode. Connect the backend/API to enable real Bengali and English AI replies.'};
 function draw(){let d=lang==='bn'?bn:en;for(let k of ['tag','heading','sub','assistant','mode','welcome','note'])document.getElementById(k).textContent=d[k];document.getElementById('prompt').placeholder=d.placeholder;document.getElementById('send').textContent=d.send;document.documentElement.lang=lang}
 document.getElementById('toggle').onclick=()=>{lang=lang==='bn'?'en':'bn';draw()};document.getElementById('form').onsubmit=e=>{e.preventDefault();let inp=document.getElementById('prompt'),q=inp.value.trim();if(!q)return;function add(t,c){let n=document.createElement('div');n.className='msg '+c;n.textContent=t;document.getElementById('messages').append(n)}add(q,'user');inp.value='';setTimeout(()=>add((lang==='bn'?bn:en).reply,''),250)};
-</script></body></html>
+<div id="sure-ai">
+  <h1>Welcome to Sure AI</h1>
+  <p>Your Personal AI Assistant</p>
+  <input id="userInput" type="text" placeholder="Ask Sure AI anything...">
+  <button onclick="alert('Sure AI is ready!')">Ask Sure AI</button>
+</div>  
+Sure AI Start -->|</script></body></html><!
