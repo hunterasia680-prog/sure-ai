@@ -1,43 +1,75 @@
-<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sure AI</title><style>
-*{box-sizing:border-box}body{margin:0;background:#070b22;color:#f5f7ff;font:16px/1.55 system-ui,sans-serif}.bar{padding:18px 5%;border-bottom:1px solid #26315b;display:flex;justify-content:space-between}.brand{font-size:24px;font-weight:800}.brand span{color:#19dcff}button{border:1px solid #365080;background:#142044;color:white;border-radius:12px;padding:10px 14px;font:inherit}main{max-width:800px;margin:45px auto;padding:0 18px}.hero{text-align:center}.hero h1{font-size:clamp(40px,8vw,68px);margin:10px}.hero p{color:#aab4d5}.cyan{color:#19dcff}.chat{margin-top:28px;border:1px solid #27345f;border-radius:20px;background:#0d1430;overflow:hidden;min-height:440px;display:flex;flex-direction:column}.top,.composer{padding:16px;border-bottom:1px solid #27345f;display:flex;justify-content:space-between;gap:10px}.messages{padding:18px;flex:1;display:flex;flex-direction:column;gap:12px}.msg{max-width:88%;padding:13px 16px;border-radius:15px;background:#172247;white-space:pre-wrap}.user{align-self:flex-end;background:#284b82}.composer{border-top:1px solid #27345f;border-bottom:0}.composer input{flex:1;min-width:0;background:#080f28;border:1px solid #344372;border-radius:12px;padding:12px;color:white;font:inherit}.send{background:linear-gradient(110deg,#08bfe9,#8156e8);border:0}small{display:block;text-align:center;color:#9aa6ca;padding:0 14px 14px}
-</style></head><body><header class="bar"><div class="brand">Sure <span>AI</span></div><button id="toggle">বাংলা | English</button></header><main><section class="hero"><div class="cyan" id="tag">ভাবুন স্মার্ট · কাজ করুন স্মার্ট · এগিয়ে যান</div><h1 id="heading">আপনার <span class="cyan">Sure AI</span></h1><p id="sub">প্রশ্ন করুন, নতুন কিছু শিখুন, আইডিয়া তৈরি করুন—সব এক জায়গায়।</p></section><section class="chat"><div class="top"><b id="assistant">💬 Sure AI সহকারী</b><span class="cyan" id="mode">ডেমো মোড</span></div><div class="messages" id="messages"><div class="msg" id="welcome">নমস্কার! আমি Sure AI। বাংলা বা English—যে ভাষায় খুশি প্রশ্ন করুন।</div></div><form class="composer" id="form"><input id="prompt" placeholder="Sure AI-কে মেসেজ লিখুন…" required maxlength="4000"><button class="send" id="send">পাঠান ➤</button></form><small id="note">এটি এখন ডেমো। আসল AI উত্তর পেতে নিরাপদ Backend/API সংযোগ করতে হবে।</small></section></main>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sure AI</title>
+<style>
+body{margin:0;background:#070b22;color:white;font-family:Arial,sans-serif}
+main{max-width:750px;margin:50px auto;padding:20px}
+h1{text-align:center;color:#19dcff}
+#messages{background:#101a3b;padding:20px;border-radius:15px;min-height:250px}
+.msg{padding:12px;margin:10px 0;background:#26345c;border-radius:12px;white-space:pre-wrap}
+.user{text-align:right;background:#284b82}
+form{display:flex;gap:8px;margin-top:15px}
+input{flex:1;min-width:0;padding:14px;border-radius:10px;border:0}
+button{padding:12px 18px;background:#08bfe9;color:#071027;border:0;border-radius:10px;font-weight:bold}
+#status{text-align:center;color:#19dcff}
+</style>
+</head>
+<body>
+<main>
+<h1>Sure AI</h1>
+<p style="text-align:center">Your Personal AI Assistant</p>
+<p id="status">AI Assistant Ready</p>
+<div id="messages">
+<div class="msg">নমস্কার! আমি Sure AI। কী জানতে চাও?</div>
+</div>
+<form id="chatForm">
+<input id="prompt" placeholder="এখানে প্রশ্ন লেখো..." required>
+<button id="send">পাঠান</button>
+</form>
+</main>
 <script>
-let lang='bn';const bn={tag:'ভাবুন স্মার্ট · কাজ করুন স্মার্ট · এগিয়ে যান',heading:'আপনার Sure AI',sub:'প্রশ্ন করুন, নতুন কিছু শিখুন, আইডিয়া তৈরি করুন—সব এক জায়গায়।',assistant:'💬 Sure AI সহকারী',mode:'ডেমো মোড',welcome:'নমস্কার! আমি Sure AI। বাংলা বা English—যে ভাষায় খুশি প্রশ্ন করুন।',placeholder:'Sure AI-কে মেসেজ লিখুন…',send:'পাঠান ➤',note:'এটি এখন ডেমো। আসল AI উত্তর পেতে নিরাপদ Backend/API সংযোগ করতে হবে।',reply:'ধন্যবাদ! এটি এখন ডেমো মোড। আসল বাংলা ও English AI উত্তর পেতে Backend/API সংযোগ করতে হবে।'};
-const en={tag:'THINK SMART · WORK SMART · LIVE BETTER',heading:'Meet your Sure AI',sub:'Ask questions, learn something new and explore ideas — all in one place.',assistant:'💬 Sure AI Assistant',mode:'Demo mode',welcome:'Hello! I’m Sure AI. Ask me in Bengali or English.',placeholder:'Message Sure AI…',send:'Send ➤',note:'This is a demo. Connect a secure backend/API to enable real AI answers.',reply:'Thanks! This is demo mode. Connect the backend/API to enable real Bengali and English AI replies.'};
-function draw(){let d=lang==='bn'?bn:en;for(let k of ['tag','heading','sub','assistant','mode','welcome','note'])document.getElementById(k).textContent=d[k];document.getElementById('prompt').placeholder=d.placeholder;document.getElementById('send').textContent=d.send;document.documentElement.lang=lang}
-document.getElementById('toggle').onclick=()=>{lang=lang==='bn'?'en':'bn';draw()};document.getElementById('form').onsubmit=e=>{e.preventDefault();let inp=document.getElementById('prompt'),q=inp.value.trim();if(!q)return;function add(t,c){let n=document.createElement('div');n.className='msg '+c;n.textContent=t;document.getElementById('messages').append(n)}add(q,'user');inp.value='';setTimeout(()=>add((lang==='bn'?bn:en).reply,''),250)};
-<div id="sure-ai">
-  <h1>Welcome to Sure AI</h1>
-  <p>Your Personal AI Assistant</p>
-  <input id="userInput" type="text" placeholder="Ask Sure AI anything...">
-  <buttononclickonclick="askSureAI()">Ask Sure AI</button>
-</div>  
-\<script>
-async function askSureAI() {
-  const input = document.getElementById("userInput");
-  const button = document.querySelector("#sure-ai button");
-  const message = input.value.trim();
+const form=document.getElementById("chatForm");
+const input=document.getElementById("prompt");
+const messages=document.getElementById("messages");
+const button=document.getElementById("send");
+const statusText=document.getElementById("status");
 
-  if (!message) return;
-
-  button.disabled = true;
-  button.innerText = "Thinking...";
-
-  try {
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
-    });
-
-    const data = await response.json();
-    alert(data.reply || data.error || "No response");
-  } catch (error) {
-    alert("Connection error. Please try again.");
-  }
-
-  button.disabled = false;
-  button.innerText = "Ask Sure AI";
+function addMessage(text,type){
+ const div=document.createElement("div");
+ div.className="msg "+type;
+ div.textContent=text;
+ messages.appendChild(div);
 }
+
+form.addEventListener("submit",async function(e){
+ e.preventDefault();
+ const message=input.value.trim();
+ if(!message)return;
+
+ addMessage(message,"user");
+ input.value="";
+ button.disabled=true;
+ statusText.textContent="Sure AI ভাবছে...";
+
+ try{
+  const response=await fetch("/api/chat",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({message})
+  });
+  const data=await response.json();
+  if(!response.ok)throw new Error(data.error||"API Error");
+  addMessage(data.reply||"উত্তর পাওয়া যায়নি","ai");
+  statusText.textContent="AI Assistant Ready";
+ }catch(error){
+  addMessage("সমস্যা হয়েছে: "+error.message,"ai");
+  statusText.textContent="Connection Error";
+ }
+ button.disabled=false;
+});
 </script>
-  Sure AI Start -->|</script></body></html><!
+</body>
+</html>
