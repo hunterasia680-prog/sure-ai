@@ -10,6 +10,34 @@ document.getElementById('toggle').onclick=()=>{lang=lang==='bn'?'en':'bn';draw()
   <h1>Welcome to Sure AI</h1>
   <p>Your Personal AI Assistant</p>
   <input id="userInput" type="text" placeholder="Ask Sure AI anything...">
-  <button onclick="alert('Sure AI is ready!')">Ask Sure AI</button>
+  <buttononclickonclick="askSureAI()">Ask Sure AI</button>
 </div>  
-Sure AI Start -->|</script></body></html><!
+\<script>
+async function askSureAI() {
+  const input = document.getElementById("userInput");
+  const button = document.querySelector("#sure-ai button");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  button.disabled = true;
+  button.innerText = "Thinking...";
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+    alert(data.reply || data.error || "No response");
+  } catch (error) {
+    alert("Connection error. Please try again.");
+  }
+
+  button.disabled = false;
+  button.innerText = "Ask Sure AI";
+}
+</script>
+  Sure AI Start -->|</script></body></html><!
